@@ -2,9 +2,9 @@ class UnidaysChallenge():
 
     def __init__(self, rules):
         self.basket = {} # basket declared as dictionary to store quantities of items
-        self.returnObj = {'total': 0, 'delivery': 0}
-        self.pricingRules = rules # take dictionary of pricing rules from main function
+        self.returnObj = {'total': 0, 'delivery': 0} # simple dictionary to store calculated total price and delivery values
         self.price = 0
+        self.pricingRules = rules # take dictionary of pricing rules from main function
 
     def addItemToBasket(self, item):
         if item in self.basket:
@@ -14,16 +14,15 @@ class UnidaysChallenge():
 
     def calculateTotalCost(self):
         items = self.pricingRules
-        total = 0
         
         """Loop through each item in basket, getting its respective price and, if applicable, discount rule(s)"""
         for item in self.basket.keys(): # for each item in list of dictionary keys
-            amount = self.basket[item]
+            amount = self.basket[item] # get quantity of each specific item in basket
             ruleSet = items[item]
 
-            if 'discount' in ruleSet:
-                discountRequirement = ruleSet['discount']['amount']
-                noDiscount = amount % discountRequirement
+            if 'discount' in ruleSet: # Only iterates if an item actually has a discount key
+                discountRequirement = ruleSet['discount']['amount'] # take both numerical values stored for the discount rule
+                noDiscount = amount % discountRequirement # remainder calculated to store how many items are ineligible for discount
                 self.price += ruleSet['price'] * noDiscount
 
                 discountAmount = (amount - noDiscount) / discountRequirement
@@ -31,16 +30,16 @@ class UnidaysChallenge():
             else:
               self.price += ruleSet['price'] * amount
 
-        self.returnObj['total'] = self.price
-        if self.price >= 50:
+        if self.price >= 50: # Calculate whether delivery charge is applicable
             self.returnObj['delivery'] = 0
         else:
             self.returnObj['delivery'] = 7
 
+        self.returnObj['total'] = self.price # store calcualted total price in return object dictionary
         return self.returnObj
                               
 if __name__ == '__main__':
-    #3D dictionary to store ruleset, allowing expandability 
+    #3D dictionary to store ruleset, allowing expandability and additional rules to be added in future
     rules = {
             'A': {'price': 8},
             'B': {'price': 12, 'discount': {'amount': 2, 'price': 20}},
@@ -52,18 +51,20 @@ if __name__ == '__main__':
     testCase.addItemToBasket('B')
     testCase.addItemToBasket('B')
     testCase.addItemToBasket('B')
-    testCase.addItemToBasket('B')
-    testCase.addItemToBasket('B')
-    testCase.addItemToBasket('B')
     testCase.addItemToBasket('C')
+    testCase.addItemToBasket('C')
+    testCase.addItemToBasket('C')
+    testCase.addItemToBasket('E')
 
+    calculation = testCase.calculateTotalCost()
+    totalCost = calculation['total']
+    deliveryCost = calculation['delivery']
+    overallCost = totalCost + deliveryCost
 
-    totalCost, deliveryCost = testCase.calculateTotalCost()
-    overallTotal = totalCost + deliveryCost
-
-    print('\nTotal cost to pay: £%' % float(totalCost)) # Ensure the price is displayed as 2 decimal places
+    print('Total price for items: £%.2f' % float(totalCost)) # Ensure the price is displayed as 2 decimal places
 
     if deliveryCost == 0:
-        print("You have qualified for free delivery!")
+        print('You have qualified for free delivery!')
     else:
         print('You have paid £%.2f for delivery' % float(deliveryCost))
+        print('\nOverall price to pay: £%.2f' % float(overallCost))
