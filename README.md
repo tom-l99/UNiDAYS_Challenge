@@ -11,3 +11,5 @@ I originally approached the program by splitting the rules from a dictionary to 
 After re-reading the task, I decided that hardcoding pricing rules was not expandable should future rules be added, or existing rules edited.
 Instead, I created a 3-dimensional dictionary to list the given pricing rules, formatting it so that the amount requirement and affected price values were able to be accessed.
 This has allowed for my program to be expandable in regards to altering pricing rules as well as providing a reduced line count.
+
+[Challenge Requirements Reference](https://github.com/MyUNiDAYS/tech-placement-challenge)
